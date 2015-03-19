@@ -1,4 +1,4 @@
-#import UIKit;
+@import UIKit;
 
 @interface BarChartView : UIView
 
