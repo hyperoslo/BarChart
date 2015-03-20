@@ -1,16 +1,16 @@
 #import "BarChartView.h"
 #import "UIColor+Hex.h"
 
-static CGFloat BarChartTopMarginHeight = 12.0f;
-static CGFloat BarChartBottomMarginHeight = 16.0f;
-static CGFloat BarChartMinimumAndMaximumValueLabelLeftMargin = 8.0f;
-static CGFloat BarChartMaximumValueLabelTopMargin = 9.0f;
-static CGFloat BarChartMinimumValueLabelBottomMargin = 18.0f;
-static CGFloat BarChartMinimumAndMaximumValueLabelWidth = 60.0f;
-static CGFloat BarChartMinimumAndMaximumValueLabelHeight = 14.0f;
-static CGFloat BarChartBarWidth = 9.0f;
-static CGFloat BarChartBarDisplacement = 15.0f;
-static CGFloat BarChartSecondaryBarDisplacement = -5.0f;
+static const CGFloat BarChartTopMarginHeight = 12.0f;
+static const CGFloat BarChartBottomMarginHeight = 16.0f;
+static const CGFloat BarChartMinimumAndMaximumValueLabelLeftMargin = 8.0f;
+static const CGFloat BarChartMaximumValueLabelTopMargin = 9.0f;
+static const CGFloat BarChartMinimumValueLabelBottomMargin = 18.0f;
+static const CGFloat BarChartMinimumAndMaximumValueLabelWidth = 60.0f;
+static const CGFloat BarChartMinimumAndMaximumValueLabelHeight = 14.0f;
+static const CGFloat BarChartBarWidth = 9.0f;
+static const CGFloat BarChartBarDisplacement = 15.0f;
+static const CGFloat BarChartSecondaryBarDisplacement = -5.0f;
 
 @interface BarChartView ()
 
