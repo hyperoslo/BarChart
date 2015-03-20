@@ -16,6 +16,7 @@
 @property (nonatomic) UIColor *horizontalLabelBackgroundColor;
 @property (nonatomic) UIColor *horizontalLabelTextColor;
 @property (nonatomic) UIColor *barColor;
+@property (nonatomic) UIColor *secondaryBarColor;
 @property (nonatomic) UIColor *minimumAndMaximumLabelTextColor;
 @property (nonatomic) UIColor *sectionTitleTextColor;
 
@@ -42,5 +43,8 @@
 - (BOOL)barChartView:(BarChartView *)barChartView hasValueAtIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)barChartView:(BarChartView *)barChartView valueAtIndexPath:(NSIndexPath *)indexPath;
 - (NSString *)barChartView:(BarChartView *)barChartView textAtIndexPath:(NSIndexPath *)indexPath;
+
+- (BOOL)barChartView:(BarChartView *)barChartView hasSecondaryValueAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat)barChartView:(BarChartView *)barChartView secondaryValueAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

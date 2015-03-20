@@ -1,16 +1,18 @@
 #import "BarChartView.h"
 #import "UIColor+Hex.h"
 
-static CGFloat BarChartTopMarginHeight = 12.0f;
-static CGFloat BarChartBottomMarginHeight = 16.0f;
-static CGFloat BarChartMinimumAndMaximumValueLabelLeftMargin = 8.0f;
-static CGFloat BarChartMaximumValueLabelTopMargin = 9.0f;
-static CGFloat BarChartMinimumValueLabelBottomMargin = 18.0f;
-static CGFloat BarChartMinimumAndMaximumValueLabelWidth = 60.0f;
-static CGFloat BarChartMinimumAndMaximumValueLabelHeight = 14.0f;
-static CGFloat BarChartBarWidth = 9.0f;
-static CGFloat BarChartProgressBarTopAndBottomMargin = 3.0f;
-static CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
+static const CGFloat BarChartTopMarginHeight = 12.0f;
+static const CGFloat BarChartBottomMarginHeight = 16.0f;
+static const CGFloat BarChartMinimumAndMaximumValueLabelLeftMargin = 8.0f;
+static const CGFloat BarChartMaximumValueLabelTopMargin = 9.0f;
+static const CGFloat BarChartMinimumValueLabelBottomMargin = 18.0f;
+static const CGFloat BarChartMinimumAndMaximumValueLabelWidth = 60.0f;
+static const CGFloat BarChartMinimumAndMaximumValueLabelHeight = 14.0f;
+static const CGFloat BarChartBarWidth = 9.0f;
+static const CGFloat BarChartBarDisplacement = 15.0f;
+static const CGFloat BarChartSecondaryBarDisplacement = -5.0f;
+static const CGFloat BarChartProgressBarTopAndBottomMargin = 3.0f;
+static const CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
 
 @interface BarChartView ()
 
@@ -39,6 +41,7 @@ static CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
     self.horizontalLabelBackgroundColor = [UIColor colorFromHex:@"0F1E36"];
     self.horizontalLabelTextColor = [UIColor whiteColor];
     self.barColor = [UIColor colorFromHex:@"F5F5F8"];
+    self.secondaryBarColor = [UIColor colorFromHex:@"3DAFEB"];
     self.minimumAndMaximumLabelTextColor = [UIColor colorFromHex:@"B1B1B1"];
     self.sectionTitleTextColor = [UIColor whiteColor];
 
@@ -96,7 +99,6 @@ static CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
     CGContextSetFillColorWithColor(context, [self.horizontalLabelBackgroundColor CGColor]);
     CGContextFillRect(context, CGRectMake(0, self.bounds.size.height - BarChartBottomMarginHeight, self.bounds.size.width, BarChartBottomMarginHeight));
 
-    CGContextSetFillColorWithColor(context, [self.barColor CGColor]);
     NSUInteger index = 0;
     for (NSUInteger section = 0; section < [self.dataSource numberOfSectionsInBarChartView:self]; section++) {
         for (NSUInteger col = 0; col < [self.dataSource barChartView:self numberOfColumnsInSection:section]; col++) {
@@ -108,6 +110,16 @@ static CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
                 CGFloat val = [self.dataSource barChartView:self valueAtIndexPath:indexPath];
                 CGFloat y0 = self.bounds.size.height - BarChartBottomMarginHeight;
                 CGFloat y1 = [self lineYForValue:val];
+                CGContextSetFillColorWithColor(context, [self.barColor CGColor]);
+                CGContextFillRect(context, CGRectMake(x0, y1, (x1 - x0), (y0 - y1)));
+            }
+            if ([self.dataSource barChartView:self hasSecondaryValueAtIndexPath:indexPath]) {
+                CGFloat x0 = x - BarChartBarWidth / 2 + BarChartSecondaryBarDisplacement;
+                CGFloat x1 = x + BarChartBarWidth / 2 + BarChartSecondaryBarDisplacement;
+                CGFloat val = [self.dataSource barChartView:self secondaryValueAtIndexPath:indexPath];
+                CGFloat y0 = self.bounds.size.height - BarChartBottomMarginHeight;
+                CGFloat y1 = [self lineYForValue:val];
+                CGContextSetFillColorWithColor(context, [self.secondaryBarColor CGColor]);
                 CGContextFillRect(context, CGRectMake(x0, y1, (x1 - x0), (y0 - y1)));
             }
 
@@ -164,7 +176,7 @@ static CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
 
 - (CGFloat)lineXAtIndex:(NSUInteger)index
 {
-    return index * self.columnWidth + self.columnWidth / 2;
+    return index * self.columnWidth + BarChartBarDisplacement + BarChartBarWidth / 2;
 }
 
 - (CGFloat)lineYForValue:(CGFloat)val
