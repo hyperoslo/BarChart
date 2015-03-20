@@ -9,6 +9,8 @@ static CGFloat BarChartMinimumValueLabelBottomMargin = 18.0f;
 static CGFloat BarChartMinimumAndMaximumValueLabelWidth = 60.0f;
 static CGFloat BarChartMinimumAndMaximumValueLabelHeight = 14.0f;
 static CGFloat BarChartBarWidth = 9.0f;
+static CGFloat BarChartBarDisplacement = 15.0f;
+static CGFloat BarChartSecondaryBarDisplacement = -5.0f;
 
 @interface BarChartView ()
 
@@ -34,6 +36,7 @@ static CGFloat BarChartBarWidth = 9.0f;
     self.horizontalLabelBackgroundColor = [UIColor colorFromHex:@"0F1E36"];
     self.horizontalLabelTextColor = [UIColor whiteColor];
     self.barColor = [UIColor colorFromHex:@"F5F5F8"];
+    self.secondaryBarColor = [UIColor colorFromHex:@"3DAFEB"];
     self.minimumAndMaximumLabelTextColor = [UIColor colorFromHex:@"B1B1B1"];
     self.sectionTitleTextColor = [UIColor whiteColor];
 
@@ -90,7 +93,6 @@ static CGFloat BarChartBarWidth = 9.0f;
     CGContextSetFillColorWithColor(context, [self.horizontalLabelBackgroundColor CGColor]);
     CGContextFillRect(context, CGRectMake(0, self.bounds.size.height - BarChartBottomMarginHeight, self.bounds.size.width, BarChartBottomMarginHeight));
 
-    CGContextSetFillColorWithColor(context, [self.barColor CGColor]);
     NSUInteger index = 0;
     for (NSUInteger section = 0; section < [self.dataSource numberOfSectionsInBarChartView:self]; section++) {
         for (NSUInteger col = 0; col < [self.dataSource barChartView:self numberOfColumnsInSection:section]; col++) {
@@ -102,6 +104,16 @@ static CGFloat BarChartBarWidth = 9.0f;
                 CGFloat val = [self.dataSource barChartView:self valueAtIndexPath:indexPath];
                 CGFloat y0 = self.bounds.size.height - BarChartBottomMarginHeight;
                 CGFloat y1 = [self lineYForValue:val];
+                CGContextSetFillColorWithColor(context, [self.barColor CGColor]);
+                CGContextFillRect(context, CGRectMake(x0, y1, (x1 - x0), (y0 - y1)));
+            }
+            if ([self.dataSource barChartView:self hasSecondaryValueAtIndexPath:indexPath]) {
+                CGFloat x0 = x - BarChartBarWidth / 2 + BarChartSecondaryBarDisplacement;
+                CGFloat x1 = x + BarChartBarWidth / 2 + BarChartSecondaryBarDisplacement;
+                CGFloat val = [self.dataSource barChartView:self secondaryValueAtIndexPath:indexPath];
+                CGFloat y0 = self.bounds.size.height - BarChartBottomMarginHeight;
+                CGFloat y1 = [self lineYForValue:val];
+                CGContextSetFillColorWithColor(context, [self.secondaryBarColor CGColor]);
                 CGContextFillRect(context, CGRectMake(x0, y1, (x1 - x0), (y0 - y1)));
             }
 
@@ -151,7 +163,7 @@ static CGFloat BarChartBarWidth = 9.0f;
 
 - (CGFloat)lineXAtIndex:(NSUInteger)index
 {
-    return index * self.columnWidth + self.columnWidth / 2;
+    return index * self.columnWidth + BarChartBarDisplacement + BarChartBarWidth / 2;
 }
 
 - (CGFloat)lineYForValue:(CGFloat)val
