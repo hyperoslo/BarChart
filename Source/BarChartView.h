@@ -40,4 +40,6 @@
 - (CGFloat)barChartView:(BarChartView *)barChartView valueAtIndexPath:(NSIndexPath *)indexPath;
 - (NSString *)barChartView:(BarChartView *)barChartView textAtIndexPath:(NSIndexPath *)indexPath;
 
+- (NSAttributedString *)textOverBarAtIndexPath:(NSIndexPath *)indexPath;
+
 @end

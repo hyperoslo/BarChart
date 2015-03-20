@@ -1,3 +1,4 @@
+@import CoreText;
 #import "BarChartView.h"
 #import "UIColor+Hex.h"
 
@@ -9,6 +10,7 @@ static CGFloat BarChartMinimumValueLabelBottomMargin = 18.0f;
 static CGFloat BarChartMinimumAndMaximumValueLabelWidth = 60.0f;
 static CGFloat BarChartMinimumAndMaximumValueLabelHeight = 14.0f;
 static CGFloat BarChartBarWidth = 9.0f;
+static const CGFloat BarChartTextOverBarDisplacement = -10.0f;
 
 @interface BarChartView ()
 
@@ -96,13 +98,20 @@ static CGFloat BarChartBarWidth = 9.0f;
         for (NSUInteger col = 0; col < [self.dataSource barChartView:self numberOfColumnsInSection:section]; col++) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:col inSection:section];
             CGFloat x = [self lineXAtIndex:index];
+            CGFloat val = [self.dataSource barChartView:self valueAtIndexPath:indexPath];
             if ([self.dataSource barChartView:self hasValueAtIndexPath:indexPath]) {
                 CGFloat x0 = x - BarChartBarWidth / 2;
                 CGFloat x1 = x + BarChartBarWidth / 2;
-                CGFloat val = [self.dataSource barChartView:self valueAtIndexPath:indexPath];
                 CGFloat y0 = self.bounds.size.height - BarChartBottomMarginHeight;
                 CGFloat y1 = [self lineYForValue:val];
                 CGContextFillRect(context, CGRectMake(x0, y1, (x1 - x0), (y0 - y1)));
+            }
+            if ([self.dataSource textOverBarAtIndexPath:indexPath]) {
+                CGFloat y = [self lineYForValue:val] - BarChartTextOverBarDisplacement;
+                CGContextSetTextPosition(context, x, y);
+                CTLineRef line = CTLineCreateWithAttributedString((CFAttributedStringRef)[self.dataSource textOverBarAtIndexPath:indexPath]);
+                CTLineDraw(line, context);
+                CFRelease(line);
             }
 
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.columnWidth, BarChartBottomMarginHeight)];
