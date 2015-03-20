@@ -9,6 +9,8 @@ static CGFloat BarChartMinimumValueLabelBottomMargin = 18.0f;
 static CGFloat BarChartMinimumAndMaximumValueLabelWidth = 60.0f;
 static CGFloat BarChartMinimumAndMaximumValueLabelHeight = 14.0f;
 static CGFloat BarChartBarWidth = 9.0f;
+static CGFloat BarChartProgressBarTopAndBottomMargin = 3.0f;
+static CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
 
 @interface BarChartView ()
 
@@ -28,6 +30,9 @@ static CGFloat BarChartBarWidth = 9.0f;
 {
     self = [super initWithFrame:frame];
     if (!self) return nil;
+
+    self.progressBarUpToColumn = 0.0f;
+    self.progressBarColor = [UIColor colorFromHex:@"3DAFEB"];
 
     self.verticalStripeGradientStartColor = [UIColor colorFromHex:@"0E223E"];
     self.verticalStripeGradientFinishColor = [UIColor colorFromHex:@"132B49"];
@@ -60,6 +65,7 @@ static CGFloat BarChartBarWidth = 9.0f;
 
     [self drawVerticalStripes];
     [self drawBarsAndHorizontalLabels];
+    [self drawProgressBar];
     [self drawVerticalSeparatorsAndSectionTitles];
     [self drawMinimumAndMaximumValues];
 }
@@ -110,12 +116,19 @@ static CGFloat BarChartBarWidth = 9.0f;
             label.textColor = self.horizontalLabelTextColor;
             label.text = [self.dataSource barChartView:self textAtIndexPath:indexPath];
             label.textAlignment = NSTextAlignmentCenter;
-            label.center = CGPointMake(x, self.bounds.size.height - BarChartBottomMarginHeight / 2);
+            label.center = CGPointMake(x, self.bounds.size.height - BarChartBottomMarginHeight / 2 + BarChartHorizontalLabelDisplacement);
             [self addSubview:label];
 
             ++index;
         }
     }
+}
+
+- (void)drawProgressBar
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [self.progressBarColor CGColor]);
+    CGContextFillRect(context, CGRectMake(0, self.bounds.size.height - BarChartBottomMarginHeight + BarChartProgressBarTopAndBottomMargin, self.progressBarUpToColumn * self.columnWidth, BarChartBottomMarginHeight - 2 * BarChartProgressBarTopAndBottomMargin));
 }
 
 - (void)drawVerticalSeparatorsAndSectionTitles
