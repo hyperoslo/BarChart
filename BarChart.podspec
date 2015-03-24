@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name             = "BarChart"
   s.summary          = "A short description of BarChart."
-  s.version          = "0.1"
+  s.version          = "0.2"
   s.homepage         = "https://github.com/hyperoslo/BarChart"
   s.license          = 'MIT'
   s.author           = { "Hyper Interaktiv AS" => "ios@hyper.no" }
