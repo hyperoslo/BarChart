@@ -8,6 +8,9 @@
 
 @property (nonatomic) UIScrollView *scrollView;
 
+@property (nonatomic) CGFloat progressBarUpToColumn;
+@property (nonatomic) UIColor *progressBarColor;
+
 @property (nonatomic) UIColor *verticalStripeGradientStartColor;
 @property (nonatomic) UIColor *verticalStripeGradientFinishColor;
 @property (nonatomic) UIColor *horizontalLabelBackgroundColor;

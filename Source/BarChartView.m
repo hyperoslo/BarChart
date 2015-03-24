@@ -11,6 +11,8 @@ static const CGFloat BarChartMinimumAndMaximumValueLabelHeight = 14.0f;
 static const CGFloat BarChartBarWidth = 9.0f;
 static const CGFloat BarChartBarDisplacement = 15.0f;
 static const CGFloat BarChartSecondaryBarDisplacement = -5.0f;
+static const CGFloat BarChartProgressBarTopAndBottomMargin = 3.0f;
+static const CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
 
 @interface BarChartView ()
 
@@ -30,6 +32,9 @@ static const CGFloat BarChartSecondaryBarDisplacement = -5.0f;
 {
     self = [super initWithFrame:frame];
     if (!self) return nil;
+
+    self.progressBarUpToColumn = 0.0f;
+    self.progressBarColor = [UIColor colorFromHex:@"3DAFEB"];
 
     self.verticalStripeGradientStartColor = [UIColor colorFromHex:@"0E223E"];
     self.verticalStripeGradientFinishColor = [UIColor colorFromHex:@"132B49"];
@@ -63,6 +68,7 @@ static const CGFloat BarChartSecondaryBarDisplacement = -5.0f;
 
     [self drawVerticalStripes];
     [self drawBarsAndHorizontalLabels];
+    [self drawProgressBar];
     [self drawVerticalSeparatorsAndSectionTitles];
     [self drawMinimumAndMaximumValues];
 }
@@ -122,12 +128,19 @@ static const CGFloat BarChartSecondaryBarDisplacement = -5.0f;
             label.textColor = self.horizontalLabelTextColor;
             label.text = [self.dataSource barChartView:self textAtIndexPath:indexPath];
             label.textAlignment = NSTextAlignmentCenter;
-            label.center = CGPointMake(x, self.bounds.size.height - BarChartBottomMarginHeight / 2);
+            label.center = CGPointMake(x, self.bounds.size.height - BarChartBottomMarginHeight / 2 + BarChartHorizontalLabelDisplacement);
             [self addSubview:label];
 
             ++index;
         }
     }
+}
+
+- (void)drawProgressBar
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [self.progressBarColor CGColor]);
+    CGContextFillRect(context, CGRectMake(0, self.bounds.size.height - BarChartBottomMarginHeight + BarChartProgressBarTopAndBottomMargin, self.progressBarUpToColumn * self.columnWidth, BarChartBottomMarginHeight - 2 * BarChartProgressBarTopAndBottomMargin));
 }
 
 - (void)drawVerticalSeparatorsAndSectionTitles
