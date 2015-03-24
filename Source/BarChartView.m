@@ -12,7 +12,8 @@ static const CGFloat BarChartMinimumAndMaximumValueLabelHeight = 14.0f;
 static const CGFloat BarChartBarWidth = 9.0f;
 static const CGFloat BarChartBarDisplacement = 15.0f;
 static const CGFloat BarChartSecondaryBarDisplacement = -5.0f;
-static const CGFloat BarChartTextOverBarDisplacement = -10.0f;
+static const CGFloat BarChartTextOverBarVerticalDisplacement = -2.0f;
+static const CGFloat BarChartTextOverBarHorizontalDisplacement = -1.5f;
 static const CGFloat BarChartProgressBarTopAndBottomMargin = 3.0f;
 static const CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
 
@@ -125,10 +126,16 @@ static const CGFloat BarChartHorizontalLabelDisplacement = 0.5f;
                 CGContextFillRect(context, CGRectMake(x0, y1, (x1 - x0), (y0 - y1)));
             }
             if ([self.dataSource textOverBarAtIndexPath:indexPath]) {
-                CGFloat y = [self lineYForValue:val] - BarChartTextOverBarDisplacement;
-                CGContextSetTextPosition(context, x, y);
                 CTLineRef line = CTLineCreateWithAttributedString((CFAttributedStringRef)[self.dataSource textOverBarAtIndexPath:indexPath]);
+                CGRect lineBounds = CTLineGetImageBounds(line, context);
+                CGFloat y = [self lineYForValue:val] + BarChartTextOverBarVerticalDisplacement;
+                CGContextSaveGState(context);
+                CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+                CGContextTranslateCTM(context, 0, self.bounds.size.height);
+                CGContextScaleCTM(context, 1.0, -1.0);
+                CGContextSetTextPosition(context, x - lineBounds.size.width / 2 + BarChartTextOverBarHorizontalDisplacement, self.bounds.size.height - (y - lineBounds.size.height / 2));
                 CTLineDraw(line, context);
+                CGContextRestoreGState(context);
                 CFRelease(line);
             }
 
